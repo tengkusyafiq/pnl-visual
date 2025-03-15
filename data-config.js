@@ -39,6 +39,27 @@ const PnLProcessor = {
   },
 
   processData(pnlData) {
+    // Calculate total values for each node
+    const nodeValues = new Array(pnlData.sankeyData.nodes.length).fill(0);
+
+    // Sum up all incoming values for each node
+    pnlData.sankeyData.links.forEach((link) => {
+      nodeValues[link.target] += link.value;
+    });
+
+    // Sum up all outgoing values for source nodes that don't have incoming links
+    pnlData.sankeyData.links.forEach((link) => {
+      if (!pnlData.sankeyData.links.some((l) => l.target === link.source)) {
+        nodeValues[link.source] = link.value;
+      }
+    });
+
+    // Calculate number of children for each node
+    const childCount = new Array(pnlData.sankeyData.nodes.length).fill(0);
+    pnlData.sankeyData.links.forEach((link) => {
+      childCount[link.source]++;
+    });
+
     const sankeyData = {
       data: [
         {
@@ -47,6 +68,7 @@ const PnLProcessor = {
           orientation: "h",
           valueformat: pnlData.metadata.valueFormat,
           valuesuffix: pnlData.metadata.valueSuffix,
+          hoverlabel: { align: "left" },
           node: {
             pad: 15,
             thickness: 15,
@@ -55,6 +77,9 @@ const PnLProcessor = {
             color: pnlData.sankeyData.nodes.map((node, index) =>
               this.getNodeColor(node.label, pnlData, index)
             ),
+            customdata: childCount,
+            hovertemplate:
+              "%{label}<br>$%{value:,.0f}<br>Items: %{customdata}<extra></extra>",
           },
           link: {
             source: pnlData.sankeyData.links.map((link) => link.source),
@@ -64,6 +89,7 @@ const PnLProcessor = {
               const sourceNode = pnlData.sankeyData.nodes[link.source];
               return this.getFlowColor(sourceNode.label, pnlData, link.source);
             }),
+            hovertemplate: "$%{value:,.0f}<extra></extra>",
           },
         },
       ],
