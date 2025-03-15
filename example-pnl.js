@@ -19,19 +19,14 @@ const pnlData = {
         "EMEA Revenue",
         "LATAM Revenue",
         "APAC Revenue",
-        "Other Revenue"
+        "Other Revenue",
       ],
     },
     profit: {
       name: "Profit",
       color: "green",
       flowColor: "rgba(0,255,0,0.4)",
-      nodes: [
-        "Gross Profit",
-        "Operating Profit",
-        "Net Profit",
-        "Other Income"
-      ],
+      nodes: ["Gross Profit", "Operating Profit", "Net Profit", "Other Income"],
     },
     cost: {
       name: "Cost",
@@ -43,7 +38,7 @@ const pnlData = {
         "Technology & Development",
         "Marketing",
         "General & Admin",
-        "Tax"
+        "Tax",
       ],
     },
     other: {
@@ -70,7 +65,7 @@ const pnlData = {
       { label: "Net Profit" },
       { label: "Technology & Development" },
       { label: "Marketing" },
-      { label: "General & Admin" }
+      { label: "General & Admin" },
     ],
     links: [
       { source: 1, target: 0, value: 3500000000 },
@@ -87,7 +82,7 @@ const pnlData = {
       { source: 9, target: 12, value: 1400000000 },
       { source: 8, target: 13, value: 700000000 },
       { source: 8, target: 14, value: 600000000 },
-      { source: 8, target: 15, value: 400000000 }
+      { source: 8, target: 15, value: 400000000 },
     ],
   },
 };

@@ -83,7 +83,10 @@ const PnLProcessor = {
             pad: 30,
             thickness: 30,
             line: { width: 0 },
-            label: pnlData.sankeyData.nodes.map((n) => n.label),
+            label: pnlData.sankeyData.nodes.map(
+              (n, i) =>
+                `${n.label}<br>$${this.formatLargeNumber(nodeValues[i])}`
+            ),
             color: pnlData.sankeyData.nodes.map((node, index) =>
               this.getNodeColor(node.label, pnlData, index)
             ),
@@ -97,11 +100,7 @@ const PnLProcessor = {
             textposition: "center",
             text: pnlData.sankeyData.nodes.map(
               (n, i) =>
-                `${
-                  n.label
-                }\n\n<span style='color: #000; background: rgba(255,255,255,0.9); padding: 2px 6px; border-radius: 4px;'>$${this.formatLargeNumber(
-                  nodeValues[i]
-                )}</span>`
+                `${n.label}<br>$${this.formatLargeNumber(nodeValues[i])}`
             ),
             textfont: {
               size: 12,
