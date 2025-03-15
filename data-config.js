@@ -41,10 +41,16 @@ const PnLProcessor = {
   processData(pnlData) {
     // Calculate total values for each node
     const nodeValues = new Array(pnlData.sankeyData.nodes.length).fill(0);
+    const childCount = new Array(pnlData.sankeyData.nodes.length).fill(0);
 
     // Sum up all incoming values for each node
     pnlData.sankeyData.links.forEach((link) => {
       nodeValues[link.target] += link.value;
+    });
+
+    // Count outgoing flows (children) for each node
+    pnlData.sankeyData.links.forEach((link) => {
+      childCount[link.source]++;
     });
 
     // Sum up all outgoing values for source nodes that don't have incoming links
@@ -52,12 +58,6 @@ const PnLProcessor = {
       if (!pnlData.sankeyData.links.some((l) => l.target === link.source)) {
         nodeValues[link.source] = link.value;
       }
-    });
-
-    // Calculate number of children for each node
-    const childCount = new Array(pnlData.sankeyData.nodes.length).fill(0);
-    pnlData.sankeyData.links.forEach((link) => {
-      childCount[link.source]++;
     });
 
     const sankeyData = {
@@ -70,16 +70,34 @@ const PnLProcessor = {
           valuesuffix: pnlData.metadata.valueSuffix,
           hoverlabel: { align: "left" },
           node: {
-            pad: 15,
-            thickness: 15,
-            line: { width: 0.5 },
+            pad: 30,
+            thickness: 30,
+            line: { width: 0 },
             label: pnlData.sankeyData.nodes.map((n) => n.label),
             color: pnlData.sankeyData.nodes.map((node, index) =>
               this.getNodeColor(node.label, pnlData, index)
             ),
-            customdata: childCount,
+            customdata: nodeValues.map((value, index) => ({
+              value: value,
+              subItems: childCount[index],
+            })),
             hovertemplate:
-              "%{label}<br>$%{value:,.0f}<br>Items: %{customdata}<extra></extra>",
+              "%{label}<br>$%{customdata.value:,.0f}<br>Sub-items: %{customdata.subItems}<extra></extra>",
+            textposition: "center",
+            text: pnlData.sankeyData.nodes.map(
+              (n, i) =>
+                `${
+                  n.label
+                }\n\n<span style='color: #000; background: rgba(255,255,255,0.9); padding: 2px 6px; border-radius: 4px;'>$${nodeValues[
+                  i
+                ].toLocaleString()}</span>`
+            ),
+            textfont: {
+              size: 12,
+              family:
+                "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+              weight: 600,
+            },
           },
           link: {
             source: pnlData.sankeyData.links.map((link) => link.source),
@@ -89,15 +107,32 @@ const PnLProcessor = {
               const sourceNode = pnlData.sankeyData.nodes[link.source];
               return this.getFlowColor(sourceNode.label, pnlData, link.source);
             }),
-            hovertemplate: "$%{value:,.0f}<extra></extra>",
+            hoverinfo: "skip",
           },
         },
       ],
       layout: {
-        title: pnlData.metadata.title,
-        width: 1118,
-        height: 772,
-        font: { size: 10 },
+        title: {
+          text: pnlData.metadata.title,
+          y: 0.98,
+          x: 0.5,
+          xanchor: "center",
+          yanchor: "top",
+          font: {
+            family:
+              "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            size: 16,
+            weight: 700,
+          },
+        },
+        autosize: true,
+        font: {
+          family:
+            "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+          size: 12,
+          weight: 600,
+        },
+        margin: { l: 50, r: 50, t: 80, b: 50 }, // Increased top margin for labels
         updatemenus: [
           {
             y: 1,
