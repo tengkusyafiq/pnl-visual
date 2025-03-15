@@ -1,0 +1,55 @@
+{
+    "metadata": {
+        "title": "Test Data Without Colors",
+        "company": "Test Corp",
+        "period": "2023",
+        "currency": "USD",
+        "valueFormat": ".1f",
+        "valueSuffix": "$"
+    },
+    "categories": {
+        "revenue": {
+            "name": "Revenue",
+            "nodes": [
+                "Total Revenue",
+                "Product Revenue",
+                "Service Revenue"
+            ]
+        },
+        "profit": {
+            "name": "Profit",
+            "nodes": ["Gross Profit", "Operating Profit", "Net Profit"]
+        },
+        "cost": {
+            "name": "Cost",
+            "nodes": [
+                "Cost of Revenue",
+                "Operating Expenses",
+                "Tax"
+            ]
+        }
+    },
+    "sankeyData": {
+        "nodes": [
+            {"label": "Total Revenue"},
+            {"label": "Product Revenue"},
+            {"label": "Service Revenue"},
+            {"label": "Cost of Revenue"},
+            {"label": "Gross Profit"},
+            {"label": "Operating Expenses"},
+            {"label": "Operating Profit"},
+            {"label": "Tax"},
+            {"label": "Net Profit"}
+        ],
+        "links": [
+            {"source": 1, "target": 0, "value": 500000},
+            {"source": 2, "target": 0, "value": 300000},
+            {"source": 0, "target": 3, "value": 400000},
+            {"source": 0, "target": 4, "value": 400000},
+            {"source": 4, "target": 5, "value": 200000},
+            {"source": 4, "target": 6, "value": 200000},
+            {"source": 6, "target": 7, "value": 50000},
+            {"source": 6, "target": 8, "value": 150000}
+        ]
+    }
+}

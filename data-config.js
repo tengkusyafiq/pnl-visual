@@ -1,5 +1,59 @@
 // Data processing and visualization configuration
 const PnLProcessor = {
+  // Add new helper functions for color generation
+  generateRandomColor() {
+    const hue = Math.floor(Math.random() * 360);
+    const saturation = 70 + Math.floor(Math.random() * 30); // 70-100%
+    const lightness = 45 + Math.floor(Math.random() * 10); // 45-55%
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  },
+
+  // Convert any color format to RGBA with specified opacity
+  toRGBA(color, opacity = 0.3) {
+    // Adjusted transparency to 0.3 for better visibility
+    // Create a temporary element to compute the RGB values
+    const temp = document.createElement("div");
+    temp.style.color = color;
+    document.body.appendChild(temp);
+    const computedColor = window.getComputedStyle(temp).color;
+    document.body.removeChild(temp);
+
+    // Extract RGB values
+    const rgb = computedColor.match(/\d+/g).map(Number);
+    return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${opacity})`;
+  },
+
+  // Cache for consistent random colors
+  colorCache: new Map(),
+
+  // Default colors for special categories
+  defaultColors: {
+    revenue: "#666666", // Updated grey
+    cost: "#cc0001", // Updated red
+    profit: "#2ba02d", // Updated green
+  },
+
+  // Get category config with fallback to random colors
+  getCategoryConfig(category, pnlData) {
+    const config = pnlData.categories[category];
+    if (!config.color) {
+      // Use default colors for revenue, cost and profit, random for others
+      if (category in this.defaultColors) {
+        config.color = this.defaultColors[category];
+      } else {
+        // Use cached color or generate new one for other categories
+        if (!this.colorCache.has(category)) {
+          this.colorCache.set(category, this.generateRandomColor());
+        }
+        config.color = this.colorCache.get(category);
+      }
+    }
+    if (!config.flowColor) {
+      config.flowColor = this.toRGBA(config.color, 0.4);
+    }
+    return config;
+  },
+
   // Helper function to format large numbers
   formatLargeNumber(value) {
     if (value >= 1e9) {
@@ -40,7 +94,7 @@ const PnLProcessor = {
 
   getNodeColor(label, pnlData, nodeIndex = null) {
     const category = this.getNodeCategory(label, pnlData, nodeIndex);
-    return pnlData.categories[category].color;
+    return this.getCategoryConfig(category, pnlData).color;
   },
 
   getFlowColor(
@@ -57,7 +111,7 @@ const PnLProcessor = {
       targetIndex
     );
     if (targetCategory === "cost" || targetCategory === "profit") {
-      return pnlData.categories[targetCategory].flowColor;
+      return this.getCategoryConfig(targetCategory, pnlData).flowColor;
     }
 
     // For other cases, use the source node's category flowColor
@@ -66,7 +120,7 @@ const PnLProcessor = {
       pnlData,
       sourceIndex
     );
-    return pnlData.categories[sourceCategory].flowColor;
+    return this.getCategoryConfig(sourceCategory, pnlData).flowColor;
   },
 
   processData(pnlData) {
