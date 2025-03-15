@@ -1,41 +1,230 @@
 {
-    "nodes": [
-      {"name": "Fee Income", "category": "revenue", "value": 4978250},
-      {"name": "Professional Services\nRevenues\n$4.98M", "category": "revenue_total", "value": 4978250},
-      {"name": "Cost of Sales\n($3.13M)", "category": "cost", "value": 3131101},
-      {"name": "Gross Profit\n$1.85M\n37% margin", "category": "profit", "value": 1847149},
-      {"name": "Billable Direct Costs\n$2.97M", "category": "cost", "value": 2974657},
-      {"name": "Non-Billable Direct Costs\n$156K", "category": "cost", "value": 156444},
-      {"name": "Billable Labor\n$2.72M", "category": "cost_detail", "value": 2715561},
-      {"name": "Billable Other\nDirect Expenses\n$259K", "category": "cost_detail", "value": 259096},
-      {"name": "Non-Billable\nDirect Labor\n$139K", "category": "cost_detail", "value": 138506},
-      {"name": "Non-Billable Other\nDirect Expenses\n$18K", "category": "cost_detail", "value": 17938},
-      {"name": "Expenses\n($1.78M)", "category": "expenses", "value": 1781679},
-      {"name": "Net Operating Income\n$65K\n1.3% margin", "category": "profit", "value": 65470},
-      {"name": "Indirect Labor\n($969K)", "category": "expense_detail", "value": 968960},
-      {"name": "Fringe Benefits\n($665K)", "category": "expense_detail", "value": 664694},
-      {"name": "Travel Expenses\n($120K)", "category": "expense_detail", "value": 119850},
-      {"name": "Other Operating\nExpenses\n($28K)", "category": "expense_detail", "value": 28175},
-      {"name": "Net Income\n$64K\n1.3% margin", "category": "final_profit", "value": 64388},
-      {"name": "Other Expenses\n($1K)", "category": "final_expense", "value": 1082}
+    "data": [
+      {
+        "type": "sankey",
+        "domain": {
+          "x": [0, 1],
+          "y": [0, 1]
+        },
+        "orientation": "h",
+        "nodepad": 15,
+        "nodethickness": 15,
+        "valueformat": ".0f",
+        "valuesuffix": "$",
+        "nodes": [
+          {"label": "Total Income"},
+          {"label": "Professional Services Revenues"},
+          {"label": "Fee Income"},
+          {"label": "Cost of Sales"},
+          {"label": "Billable Direct Costs"},
+          {"label": "Billable Direct Labor"},
+          {"label": "Billable Direct Employee Salaries"},
+          {"label": "Billable Direct Officer Salaries"},
+          {"label": "Billable Other Direct Expenses"},
+          {"label": "Billable Materials"},
+          {"label": "Billable Sub-Contractors"},
+          {"label": "Billable Equipment Rental"},
+          {"label": "Billable Other Direct Costs"},
+          {"label": "Non-Billable Direct Costs"},
+          {"label": "Non-Billable Direct Labor"},
+          {"label": "Non-Billable Direct Officer Salaries"},
+          {"label": "Non-Billable Direct Employee Salaries"},
+          {"label": "Non-Billable Other Direct Expenses"},
+          {"label": "Non-Billable Materials"},
+          {"label": "Non-Billable Sub-Contractors"},
+          {"label": "Non-Billable Equipment Rental"},
+          {"label": "Non-Billable Other Direct Costs"},
+          {"label": "Gross Profit"},
+          {"label": "Expenses"},
+          {"label": "Indirect Labor"},
+          {"label": "Administrative Labor"},
+          {"label": "Unallowable Admin Labor"},
+          {"label": "Advertising Labor"},
+          {"label": "Bid & Proposal Labor"},
+          {"label": "Direct Selling Labor"},
+          {"label": "Training Labor"},
+          {"label": "Labor Variance"},
+          {"label": "Fringe Benefits"},
+          {"label": "Vacation Expense"},
+          {"label": "Holiday Expense"},
+          {"label": "Sick Expense"},
+          {"label": "Incentive Bonus"},
+          {"label": "Retirement Plan Contributions"},
+          {"label": "Benefit Insurance"},
+          {"label": "Disability Insurance"},
+          {"label": "Health Insurance"},
+          {"label": "Life Insurance"},
+          {"label": "Key Person Life Insurance"},
+          {"label": "Travel Expenses"},
+          {"label": "Airfare"},
+          {"label": "FAR Unallowable Airfare"},
+          {"label": "Lodging"},
+          {"label": "FAR Unallowable Lodging"},
+          {"label": "Advertising Expense"},
+          {"label": "Bid & Proposal Expense"},
+          {"label": "Meals Expense"},
+          {"label": "FAR Unallowable Meals Expense"},
+          {"label": "Net Operating Income"},
+          {"label": "Other Income & Expenses"},
+          {"label": "Interest Income"},
+          {"label": "Interest Expense"},
+          {"label": "Gain/(loss) on sale of assets"},
+          {"label": "Net Income (Loss)"}
+        ],
+        "links": [
+          {"source": 0, "target": 1, "value": 4978250},
+          {"source": 1, "target": 2, "value": 4978250},
+          {"source": 0, "target": 3, "value": 3131101},
+          {"source": 3, "target": 4, "value": 2974657},
+          {"source": 3, "target": 13, "value": 156444},
+          {"source": 4, "target": 5, "value": 2715561},
+          {"source": 4, "target": 8, "value": 259096},
+          {"source": 5, "target": 6, "value": 2535948},
+          {"source": 5, "target": 7, "value": 179613},
+          {"source": 8, "target": 9, "value": 50952},
+          {"source": 8, "target": 10, "value": 160350},
+          {"source": 8, "target": 11, "value": 11246},
+          {"source": 8, "target": 12, "value": 36548},
+          {"source": 13, "target": 14, "value": 138506},
+          {"source": 13, "target": 17, "value": 17938},
+          {"source": 14, "target": 15, "value": 65943},
+          {"source": 14, "target": 16, "value": 72563},
+          {"source": 17, "target": 18, "value": 203},
+          {"source": 17, "target": 19, "value": 16500},
+          {"source": 17, "target": 20, "value": 1200},
+          {"source": 17, "target": 21, "value": 35},
+          {"source": 0, "target": 22, "value": 1847149},
+          {"source": 22, "target": 23, "value": 1781679},
+          {"source": 23, "target": 24, "value": 968960},
+          {"source": 23, "target": 32, "value": 664694},
+          {"source": 23, "target": 43, "value": 119850},
+          {"source": 23, "target": 48, "value": 26350},
+          {"source": 23, "target": 49, "value": 245},
+          {"source": 23, "target": 50, "value": 1580},
+          {"source": 24, "target": 25, "value": 978945},
+          {"source": 24, "target": 27, "value": 74693},
+          {"source": 24, "target": 28, "value": 122063},
+          {"source": 24, "target": 29, "value": 3620},
+          {"source": 24, "target": 30, "value": 15000},
+          {"source": 24, "target": 31, "value": -225361},
+          {"source": 25, "target": 26, "value": 16060},
+          {"source": 32, "target": 33, "value": 125469},
+          {"source": 32, "target": 34, "value": 62530},
+          {"source": 32, "target": 35, "value": 45784},
+          {"source": 32, "target": 36, "value": 120000},
+          {"source": 32, "target": 37, "value": 150000},
+          {"source": 32, "target": 38, "value": 160911},
+          {"source": 38, "target": 39, "value": 45897},
+          {"source": 38, "target": 40, "value": 78945},
+          {"source": 38, "target": 41, "value": 23569},
+          {"source": 38, "target": 42, "value": 12500},
+          {"source": 43, "target": 44, "value": 50160},
+          {"source": 43, "target": 46, "value": 69690},
+          {"source": 44, "target": 45, "value": 4560},
+          {"source": 46, "target": 47, "value": 740},
+          {"source": 50, "target": 51, "value": 326},
+          {"source": 22, "target": 52, "value": 65470},
+          {"source": 52, "target": 53, "value": 1082},
+          {"source": 53, "target": 54, "value": 32},
+          {"source": 53, "target": 55, "value": 86},
+          {"source": 53, "target": 56, "value": 1200},
+          {"source": 52, "target": 57, "value": 64388}
+        ]
+      }
     ],
-    "links": [
-      {"source": 0, "target": 1, "value": 4978250},
-      {"source": 1, "target": 2, "value": 3131101},
-      {"source": 1, "target": 3, "value": 1847149},
-      {"source": 2, "target": 4, "value": 2974657},
-      {"source": 2, "target": 5, "value": 156444},
-      {"source": 4, "target": 6, "value": 2715561},
-      {"source": 4, "target": 7, "value": 259096},
-      {"source": 5, "target": 8, "value": 138506},
-      {"source": 5, "target": 9, "value": 17938},
-      {"source": 3, "target": 10, "value": 1781679},
-      {"source": 3, "target": 11, "value": 65470},
-      {"source": 10, "target": 12, "value": 968960},
-      {"source": 10, "target": 13, "value": 664694},
-      {"source": 10, "target": 14, "value": 119850},
-      {"source": 10, "target": 15, "value": 28175},
-      {"source": 11, "target": 16, "value": 64388},
-      {"source": 11, "target": 17, "value": 1082}
-    ]
+    "layout": {
+      "title": "XYZ, Inc. Profit and Loss Statement - Fiscal Year Ended 12/31/2018",
+      "width": 1118,
+      "height": 772,
+      "font": {
+        "size": 10
+      },
+      "updatemenus": [
+        {
+          "y": 1,
+          "buttons": [
+            {
+              "label": "Light",
+              "method": "relayout",
+              "args": ["paper_bgcolor", "white"]
+            },
+            {
+              "label": "Dark",
+              "method": "relayout",
+              "args": ["paper_bgcolor", "black"]
+            }
+          ]
+        },
+        {
+          "y": 0.9,
+          "buttons": [
+            {
+              "label": "Thick",
+              "method": "restyle",
+              "args": ["nodethickness", 15]
+            },
+            {
+              "label": "Thin",
+              "method": "restyle",
+              "args": ["nodethickness", 8]
+            }
+          ]
+        },
+        {
+          "y": 0.8,
+          "buttons": [
+            {
+              "label": "Small gap",
+              "method": "restyle",
+              "args": ["nodepad", 15]
+            },
+            {
+              "label": "Large gap",
+              "method": "restyle",
+              "args": ["nodepad", 20]
+            }
+          ]
+        },
+        {
+          "y": 0.7,
+          "buttons": [
+            {
+              "label": "Snap",
+              "method": "restyle",
+              "args": ["arrangement", "snap"]
+            },
+            {
+              "label": "Perpendicular",
+              "method": "restyle",
+              "args": ["arrangement", "perpendicular"]
+            },
+            {
+              "label": "Freeform",
+              "method": "restyle",
+              "args": ["arrangement", "freeform"]
+            },
+            {
+              "label": "Fixed",
+              "method": "restyle",
+              "args": ["arrangement", "fixed"]
+            }
+          ]
+        },
+        {
+          "y": 0.6,
+          "buttons": [
+            {
+              "label": "Horizontal",
+              "method": "restyle",
+              "args": ["orientation", "h"]
+            },
+            {
+              "label": "Vertical",
+              "method": "restyle",
+              "args": ["orientation", "v"]
+            }
+          ]
+        }
+      ]
+    }
   }

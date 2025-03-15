@@ -36,7 +36,7 @@
     //
     // PR: https://github.com/plotly/plotly.js/pull/1591
     var d3 = Plotly.d3;
-    d3.json('example_data_original.json', function(mock) {
+    d3.json('https://raw.githubusercontent.com/tengkusyafiq/pnl-visual/refs/heads/master/example_data.json', function(mock) {
       
       Plotly.plot('graphDiv', mock.data, mock.layout); 
      
