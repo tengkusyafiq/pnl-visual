@@ -211,8 +211,7 @@ const PnLProcessor = {
           xanchor: "center",
           yanchor: "top",
           font: {
-            family:
-              "'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            family: "Montserrat, sans-serif",
             size: 16,
             weight: 700,
           },
@@ -249,84 +248,60 @@ const PnLProcessor = {
       return select;
     };
 
-    // Theme dropdown
-    const themeDropdown = createDropdown(
-      [
-        { label: "Light", value: "#f2f2f2" },
-        { label: "Dark", value: "black" },
-      ],
-      "#f2f2f2",
-      (e) =>
-        Plotly.relayout("graphDiv", {
-          paper_bgcolor: e.target.value,
-          plot_bgcolor: e.target.value,
-        })
-    );
-
-    // Node thickness dropdown
-    const thicknessDropdown = createDropdown(
-      [
-        { label: "Thick", value: "15" },
-        { label: "Thin", value: "8" },
-      ],
-      "15",
-      (e) => Plotly.restyle("graphDiv", { "node.thickness": e.target.value })
-    );
-
-    // Node gap dropdown
-    const gapDropdown = createDropdown(
-      [
-        { label: "Small gap", value: "15" },
-        { label: "Large gap", value: "20" },
-      ],
-      "15",
-      (e) => Plotly.restyle("graphDiv", { "node.pad": e.target.value })
-    );
-
-    // Arrangement dropdown
-    const arrangementDropdown = createDropdown(
-      [
-        { label: "Snap", value: "snap" },
-        { label: "Perpendicular", value: "perpendicular" },
-        { label: "Freeform", value: "freeform" },
-        { label: "Fixed", value: "fixed" },
-      ],
-      "snap",
-      (e) => Plotly.restyle("graphDiv", { arrangement: e.target.value })
-    );
-
-    // Orientation dropdown
-    const orientationDropdown = createDropdown(
-      [
-        { label: "Horizontal", value: "h" },
-        { label: "Vertical", value: "v" },
-      ],
-      "h",
-      (e) => Plotly.restyle("graphDiv", { orientation: e.target.value })
-    );
-
-    // Add labels and dropdowns to container
-    const labels = [
-      "Theme:",
-      "Node Thickness:",
-      "Node Gap:",
-      "Arrangement:",
-      "Orientation:",
-    ];
-    const dropdowns = [
-      themeDropdown,
-      thicknessDropdown,
-      gapDropdown,
-      arrangementDropdown,
-      orientationDropdown,
+    // Create and add dropdowns
+    const dropdownConfigs = [
+      {
+        label: "Node Thickness:",
+        options: [
+          { label: "Thick", value: "15" },
+          { label: "Thin", value: "8" },
+        ],
+        defaultValue: "15",
+        onChange: (e) =>
+          Plotly.restyle("graphDiv", { "node.thickness": e.target.value }),
+      },
+      {
+        label: "Node Gap:",
+        options: [
+          { label: "Small gap", value: "15" },
+          { label: "Large gap", value: "20" },
+        ],
+        defaultValue: "15",
+        onChange: (e) =>
+          Plotly.restyle("graphDiv", { "node.pad": e.target.value }),
+      },
+      {
+        label: "Arrangement:",
+        options: [
+          { label: "Snap", value: "snap" },
+          { label: "Perpendicular", value: "perpendicular" },
+          { label: "Freeform", value: "freeform" },
+          { label: "Fixed", value: "fixed" },
+        ],
+        defaultValue: "snap",
+        onChange: (e) =>
+          Plotly.restyle("graphDiv", { arrangement: e.target.value }),
+      },
+      {
+        label: "Orientation:",
+        options: [
+          { label: "Horizontal", value: "h" },
+          { label: "Vertical", value: "v" },
+        ],
+        defaultValue: "h",
+        onChange: (e) =>
+          Plotly.restyle("graphDiv", { orientation: e.target.value }),
+      },
     ];
 
-    labels.forEach((label, i) => {
+    dropdownConfigs.forEach((config) => {
       const labelEl = document.createElement("span");
-      labelEl.textContent = label;
+      labelEl.textContent = config.label;
       labelEl.style.marginRight = "5px";
       menuContainer.appendChild(labelEl);
-      menuContainer.appendChild(dropdowns[i]);
+      menuContainer.appendChild(
+        createDropdown(config.options, config.defaultValue, config.onChange)
+      );
     });
 
     return sankeyData;
