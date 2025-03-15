@@ -2,50 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Title</title>
+  <title>P&L Viewer</title>
   <script src="https://rawgit.com/monfera/plotly.js/sankey/dist/plotly-sankey-original-with-stroke.min.js"></script>
   <style>
     body {
       margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .controls {
+      margin-bottom: 20px;
+    }
+    #fileInput {
+      margin-right: 10px;
     }
   </style>
 </head>
 <body>
+  <div class="controls">
+    <input type="file" id="fileInput" accept=".json">
+    <button onclick="loadDefaultData()">Load Default Data</button>
+  </div>
   <div id="graphDiv"></div>
 
+  <script src="data-config.js"></script>
+  <script src="example-pnl.js"></script>
   <script>
-    // Sankey core layout code Copyright Mike Bostock, 2015 (MIT)
-    // with a modification covered with a PR
-    //
-    // Add-on features:
-    //    - use of force for drag&drop without manual overlap fiddling
-    //       - multiple force ticks per frame for faster response
-    //       - starting/stopping force per graph layer (column)
-    //       - use of force for handling apparently non-circular shapes
-    //    - vertical layout (sorry, transition to be disabled later)
-    //    - option for multi-edge handling https://github.com/d3/d3-sankey/pull/19
-    //    - plotly tooltips and raising various plotly events
-    //    - plotly-style color contrast: text becomes white on darker backgrounds
-    //    - highlight all connecting links and nodes when hovering a node
-    // 
-    // Current limitations:
-    //    - positions aren't saved (layout lost on update)
-    //    - positions aren't specifiable yet (no attributes for this yet)
-    //    - cheesy horizontal/vertical switch
-    //    - screenshot fails for a couple of reasons
-    //
-    // PR: https://github.com/plotly/plotly.js/pull/1591
-    var d3 = Plotly.d3;
-    d3.json('https://raw.githubusercontent.com/tengkusyafiq/pnl-visual/refs/heads/master/example_data.json', function(mock) {
-      
-      Plotly.plot('graphDiv', mock.data, mock.layout); 
-     
-      graphDiv.on('plotly_hover', function(e) {
-        console.log('hover', e);
-      });
-      graphDiv.on('plotly_unhover', function(e) {
-        console.log('unhover', e);
-      });
+    // Initialize with default data
+    let currentData = null;
+    
+    // Function to update the visualization
+    function updateVisualization(data) {
+      currentData = data;
+      const processedData = PnLViewer.processData(data);
+      Plotly.newPlot('graphDiv', processedData.data, processedData.layout);
+    }
+
+    // Function to load JSON file
+    function loadJSONFile(file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const data = JSON.parse(e.target.result);
+          updateVisualization(data);
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+          alert('Error loading JSON file. Please make sure it follows the PnL data structure format.');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    // Load default data
+    function loadDefaultData() {
+      updateVisualization(ExamplePnL);
+    }
+
+    // Set up file input handler
+    document.getElementById('fileInput').addEventListener('change', (event) => {
+      const file = event.target.files[0];
+      if (file) {
+        loadJSONFile(file);
+      }
+    });
+
+    // Initialize with default data
+    loadDefaultData();
+    
+    // Event handlers
+    graphDiv.on('plotly_hover', function(e) {
+      console.log('hover', e);
+    });
+    graphDiv.on('plotly_unhover', function(e) {
+      console.log('unhover', e);
     });
   </script>
 </body>
