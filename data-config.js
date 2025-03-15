@@ -43,9 +43,30 @@ const PnLProcessor = {
     return pnlData.categories[category].color;
   },
 
-  getFlowColor(label, pnlData, nodeIndex = null) {
-    const category = this.getNodeCategory(label, pnlData, nodeIndex);
-    return pnlData.categories[category].flowColor;
+  getFlowColor(
+    sourceLabel,
+    targetLabel,
+    pnlData,
+    sourceIndex = null,
+    targetIndex = null
+  ) {
+    // For flows going into cost or profit nodes, use the target node's flowColor
+    const targetCategory = this.getNodeCategory(
+      targetLabel,
+      pnlData,
+      targetIndex
+    );
+    if (targetCategory === "cost" || targetCategory === "profit") {
+      return pnlData.categories[targetCategory].flowColor;
+    }
+
+    // For other cases, use the source node's category flowColor
+    const sourceCategory = this.getNodeCategory(
+      sourceLabel,
+      pnlData,
+      sourceIndex
+    );
+    return pnlData.categories[sourceCategory].flowColor;
   },
 
   processData(pnlData) {
@@ -115,7 +136,14 @@ const PnLProcessor = {
             value: pnlData.sankeyData.links.map((link) => link.value),
             color: pnlData.sankeyData.links.map((link) => {
               const sourceNode = pnlData.sankeyData.nodes[link.source];
-              return this.getFlowColor(sourceNode.label, pnlData, link.source);
+              const targetNode = pnlData.sankeyData.nodes[link.target];
+              return this.getFlowColor(
+                sourceNode.label,
+                targetNode.label,
+                pnlData,
+                link.source,
+                link.target
+              );
             }),
             hoverinfo: "skip",
           },
