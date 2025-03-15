@@ -224,96 +224,111 @@ const PnLProcessor = {
           size: 12,
           weight: 600,
         },
-        margin: { l: 50, r: 50, t: 80, b: 50 }, // Increased top margin for labels
-        updatemenus: [
-          {
-            y: 1,
-            buttons: [
-              {
-                label: "Light",
-                method: "relayout",
-                args: ["paper_bgcolor", "white"],
-              },
-              {
-                label: "Dark",
-                method: "relayout",
-                args: ["paper_bgcolor", "black"],
-              },
-            ],
-          },
-          {
-            y: 0.9,
-            buttons: [
-              {
-                label: "Thick",
-                method: "restyle",
-                args: ["nodethickness", 15],
-              },
-              {
-                label: "Thin",
-                method: "restyle",
-                args: ["nodethickness", 8],
-              },
-            ],
-          },
-          {
-            y: 0.8,
-            buttons: [
-              {
-                label: "Small gap",
-                method: "restyle",
-                args: ["nodepad", 15],
-              },
-              {
-                label: "Large gap",
-                method: "restyle",
-                args: ["nodepad", 20],
-              },
-            ],
-          },
-          {
-            y: 0.7,
-            buttons: [
-              {
-                label: "Snap",
-                method: "restyle",
-                args: ["arrangement", "snap"],
-              },
-              {
-                label: "Perpendicular",
-                method: "restyle",
-                args: ["arrangement", "perpendicular"],
-              },
-              {
-                label: "Freeform",
-                method: "restyle",
-                args: ["arrangement", "freeform"],
-              },
-              {
-                label: "Fixed",
-                method: "restyle",
-                args: ["arrangement", "fixed"],
-              },
-            ],
-          },
-          {
-            y: 0.6,
-            buttons: [
-              {
-                label: "Horizontal",
-                method: "restyle",
-                args: ["orientation", "h"],
-              },
-              {
-                label: "Vertical",
-                method: "restyle",
-                args: ["orientation", "v"],
-              },
-            ],
-          },
-        ],
+        margin: { l: 50, r: 50, t: 80, b: 20 }, // Reduced bottom margin since menus are outside
+        paper_bgcolor: "#f2f2f2",
+        plot_bgcolor: "#f2f2f2",
       },
     };
+
+    // Create dropdown menus in the container
+    const menuContainer = document.getElementById("menuContainer");
+    menuContainer.innerHTML = "";
+
+    const createDropdown = (options, defaultValue, onChange) => {
+      const select = document.createElement("select");
+      select.style.marginRight = "20px";
+      select.style.padding = "5px";
+      options.forEach((opt) => {
+        const option = document.createElement("option");
+        option.value = opt.value;
+        option.text = opt.label;
+        select.appendChild(option);
+      });
+      select.value = defaultValue;
+      select.addEventListener("change", onChange);
+      return select;
+    };
+
+    // Theme dropdown
+    const themeDropdown = createDropdown(
+      [
+        { label: "Light", value: "#f2f2f2" },
+        { label: "Dark", value: "black" },
+      ],
+      "#f2f2f2",
+      (e) =>
+        Plotly.relayout("graphDiv", {
+          paper_bgcolor: e.target.value,
+          plot_bgcolor: e.target.value,
+        })
+    );
+
+    // Node thickness dropdown
+    const thicknessDropdown = createDropdown(
+      [
+        { label: "Thick", value: "15" },
+        { label: "Thin", value: "8" },
+      ],
+      "15",
+      (e) => Plotly.restyle("graphDiv", { "node.thickness": e.target.value })
+    );
+
+    // Node gap dropdown
+    const gapDropdown = createDropdown(
+      [
+        { label: "Small gap", value: "15" },
+        { label: "Large gap", value: "20" },
+      ],
+      "15",
+      (e) => Plotly.restyle("graphDiv", { "node.pad": e.target.value })
+    );
+
+    // Arrangement dropdown
+    const arrangementDropdown = createDropdown(
+      [
+        { label: "Snap", value: "snap" },
+        { label: "Perpendicular", value: "perpendicular" },
+        { label: "Freeform", value: "freeform" },
+        { label: "Fixed", value: "fixed" },
+      ],
+      "snap",
+      (e) => Plotly.restyle("graphDiv", { arrangement: e.target.value })
+    );
+
+    // Orientation dropdown
+    const orientationDropdown = createDropdown(
+      [
+        { label: "Horizontal", value: "h" },
+        { label: "Vertical", value: "v" },
+      ],
+      "h",
+      (e) => Plotly.restyle("graphDiv", { orientation: e.target.value })
+    );
+
+    // Add labels and dropdowns to container
+    const labels = [
+      "Theme:",
+      "Node Thickness:",
+      "Node Gap:",
+      "Arrangement:",
+      "Orientation:",
+    ];
+    const dropdowns = [
+      themeDropdown,
+      thicknessDropdown,
+      gapDropdown,
+      arrangementDropdown,
+      orientationDropdown,
+    ];
+
+    labels.forEach((label, i) => {
+      const labelEl = document.createElement("span");
+      labelEl.textContent = label;
+      labelEl.style.marginRight = "5px";
+      menuContainer.appendChild(labelEl);
+      menuContainer.appendChild(dropdowns[i]);
+    });
+
     return sankeyData;
   },
 };

@@ -10,19 +10,30 @@
   <style>
     body {
       margin: 0;
-      padding: 20px;
+      padding: 10px;
       font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       font-weight: 600;
+      background-color: #f2f2f2;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
     .controls {
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     #fileInput {
       margin-right: 10px;
     }
     #graphDiv {
       width: 100%;
-      height: calc(100vh - 100px);
+      flex-grow: 1;
+      background-color: #f2f2f2;
+      margin-bottom: 10px;
+    }
+    #menuContainer {
+      padding: 10px;
+      background-color: #f2f2f2;
+      min-height: 50px;
     }
   </style>
 </head>
@@ -32,6 +43,7 @@
     <button onclick="loadDefaultData()">Load Default Data</button>
   </div>
   <div id="graphDiv"></div>
+  <div id="menuContainer"></div>
 
   <script src="data-config.js"></script>
   <script src="example-pnl.js"></script>
