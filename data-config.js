@@ -45,21 +45,26 @@ const PnLProcessor = {
           type: "sankey",
           domain: { x: [0, 1], y: [0, 1] },
           orientation: "h",
-          nodepad: 15,
-          nodethickness: 15,
           valueformat: pnlData.metadata.valueFormat,
           valuesuffix: pnlData.metadata.valueSuffix,
-          nodes: pnlData.sankeyData.nodes.map((node, index) => ({
-            ...node,
-            color: this.getNodeColor(node.label, pnlData, index),
-          })),
-          links: pnlData.sankeyData.links.map((link) => {
-            const sourceNode = pnlData.sankeyData.nodes[link.source];
-            return {
-              ...link,
-              color: this.getFlowColor(sourceNode.label, pnlData, link.source),
-            };
-          }),
+          node: {
+            pad: 15,
+            thickness: 15,
+            line: { width: 0.5 },
+            label: pnlData.sankeyData.nodes.map((n) => n.label),
+            color: pnlData.sankeyData.nodes.map((node, index) =>
+              this.getNodeColor(node.label, pnlData, index)
+            ),
+          },
+          link: {
+            source: pnlData.sankeyData.links.map((link) => link.source),
+            target: pnlData.sankeyData.links.map((link) => link.target),
+            value: pnlData.sankeyData.links.map((link) => link.value),
+            color: pnlData.sankeyData.links.map((link) => {
+              const sourceNode = pnlData.sankeyData.nodes[link.source];
+              return this.getFlowColor(sourceNode.label, pnlData, link.source);
+            }),
+          },
         },
       ],
       layout: {
