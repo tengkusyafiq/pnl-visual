@@ -117,7 +117,7 @@ const PnLProcessor = {
               formattedValue: this.formatLargeNumber(value),
             })),
             hovertemplate:
-              "%{label}<br>$%{customdata.formattedValue}<br>Sub-items: %{customdata.subItems}<extra></extra>",
+              "%{label}<br>Sub-items: %{customdata.subItems}<extra></extra>",
             textposition: "center",
             text: pnlData.sankeyData.nodes.map(
               (n, i) =>
