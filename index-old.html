@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P&L Sankey Diagram</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .node rect {
+            fill-opacity: 0.9;
+            shape-rendering: crispEdges;
+            cursor: move;
+        }
+        .node text {
+            font-size: 12px;
+            font-weight: 500;
+        }
+        .link {
+            fill: none;
+            stroke-opacity: 0.4;
+        }
+        .link:hover {
+            stroke-opacity: 0.7;
+        }
+        .controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="controls">
+            <div class="btn-group" role="group">
+                <button id="resetBtn" class="btn btn-secondary">Reset Position</button>
+                <button id="expandAllBtn" class="btn btn-primary">Expand All</button>
+                <button id="collapseAllBtn" class="btn btn-primary">Collapse All</button>
+            </div>
+        </div>
+        <div id="chart"></div>
+    </div>
+
+    <!-- D3.js and Sankey plugin -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/d3-sankey@0.12.3/dist/d3-sankey.min.js"></script>
+    <script>
+        // Load and process the data
+        const data = {
+            "nodes": [
+                {"name": "Fee Income", "category": "revenue", "value": 4978250},
+                {"name": "Professional Services\nRevenues\n$4.98M", "category": "revenue_total", "value": 4978250},
+                {"name": "Cost of Sales\n($3.13M)", "category": "cost", "value": 3131101},
+                {"name": "Gross Profit\n$1.85M\n37% margin", "category": "profit", "value": 1847149},
+                {"name": "Billable Direct Costs\n$2.97M", "category": "cost", "value": 2974657},
+                {"name": "Non-Billable Direct Costs\n$156K", "category": "cost", "value": 156444},
+                {"name": "Billable Labor\n$2.72M", "category": "cost_detail", "value": 2715561},
+                {"name": "Billable Other\nDirect Expenses\n$259K", "category": "cost_detail", "value": 259096},
+                {"name": "Non-Billable\nDirect Labor\n$139K", "category": "cost_detail", "value": 138506},
+                {"name": "Non-Billable Other\nDirect Expenses\n$18K", "category": "cost_detail", "value": 17938},
+                {"name": "Expenses\n($1.78M)", "category": "expenses", "value": 1781679},
+                {"name": "Net Operating Income\n$65K\n1.3% margin", "category": "profit", "value": 65470},
+                {"name": "Indirect Labor\n($969K)", "category": "expense_detail", "value": 968960},
+                {"name": "Fringe Benefits\n($665K)", "category": "expense_detail", "value": 664694},
+                {"name": "Travel Expenses\n($120K)", "category": "expense_detail", "value": 119850},
+                {"name": "Other Operating\nExpenses\n($28K)", "category": "expense_detail", "value": 28175},
+                {"name": "Net Income\n$64K\n1.3% margin", "category": "final_profit", "value": 64388},
+                {"name": "Other Expenses\n($1K)", "category": "final_expense", "value": 1082}
+            ],
+            "links": [
+                {"source": 0, "target": 1, "value": 4978250},
+                {"source": 1, "target": 2, "value": 3131101},
+                {"source": 1, "target": 3, "value": 1847149},
+                {"source": 2, "target": 4, "value": 2974657},
+                {"source": 2, "target": 5, "value": 156444},
+                {"source": 4, "target": 6, "value": 2715561},
+                {"source": 4, "target": 7, "value": 259096},
+                {"source": 5, "target": 8, "value": 138506},
+                {"source": 5, "target": 9, "value": 17938},
+                {"source": 3, "target": 10, "value": 1781679},
+                {"source": 3, "target": 11, "value": 65470},
+                {"source": 10, "target": 12, "value": 968960},
+                {"source": 10, "target": 13, "value": 664694},
+                {"source": 10, "target": 14, "value": 119850},
+                {"source": 10, "target": 15, "value": 28175},
+                {"source": 11, "target": 16, "value": 64388},
+                {"source": 11, "target": 17, "value": 1082}
+            ]
+        };
+
+        // Set up the dimensions and margins
+        const margin = {top: 10, right: 10, bottom: 10, left: 10};
+        const width = window.innerWidth - margin.left - margin.right;
+        const height = window.innerHeight - margin.top - margin.bottom - 50;
+
+        // Create the SVG container
+        const svg = d3.select("#chart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform", `translate(${margin.left},${margin.top})`);
+
+        // Create the Sankey generator
+        const sankey = d3.sankey()
+            .nodeWidth(15)
+            .nodePadding(20)
+            .size([width, height])
+            .nodeId(d => d.index);
+
+        // Color scale for different categories
+        const colorScale = d3.scaleOrdinal()
+            .domain(['revenue', 'revenue_total', 'cost', 'profit', 'cost_detail', 
+                    'expenses', 'expense_detail', 'final_profit', 'final_expense'])
+            .range(['#2ecc71', '#27ae60', '#e74c3c', '#3498db', '#e67e22', 
+                   '#9b59b6', '#f1c40f', '#1abc9c', '#c0392b']);
+
+        // Initial node positions for reset
+        let initialNodePositions = [];
+
+        // Process the data
+        const { nodes, links } = sankey({
+            nodes: data.nodes.map(d => Object.assign({}, d)),
+            links: data.links.map(d => Object.assign({}, d))
+        });
+
+        // Store initial positions
+        initialNodePositions = nodes.map(node => ({
+            id: node.index,
+            x0: node.x0,
+            x1: node.x1,
+            y0: node.y0,
+            y1: node.y1
+        }));
+
+        // Create the links
+        const link = svg.append("g")
+            .selectAll(".link")
+            .data(links)
+            .join("path")
+            .attr("class", "link")
+            .attr("d", d3.sankeyLinkHorizontal())
+            .attr("stroke", d => colorScale(d.source.category))
+            .attr("stroke-width", d => Math.max(1, d.width));
+
+        // Create the nodes
+        const node = svg.append("g")
+            .selectAll(".node")
+            .data(nodes)
+            .join("g")
+            .attr("class", "node")
+            .attr("transform", d => `translate(${d.x0},${d.y0})`)
+            .call(d3.drag()
+                .subject(d => d)
+                .on("drag", dragNode));
+
+        // Add rectangles to nodes
+        node.append("rect")
+            .attr("height", d => d.y1 - d.y0)
+            .attr("width", sankey.nodeWidth())
+            .attr("fill", d => colorScale(d.category))
+            .attr("stroke", "#000");
+
+        // Add labels to nodes
+        node.append("text")
+            .attr("x", d => d.x0 < width / 2 ? sankey.nodeWidth() + 6 : -6)
+            .attr("y", d => (d.y1 - d.y0) / 2)
+            .attr("dy", "0.35em")
+            .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end")
+            .text(d => d.name);
+
+        // Node dragging function - updated for both x and y movement
+        function dragNode(event, d) {
+            // Calculate x position within bounds
+            const dx = event.x - d.x0;
+            const newX0 = d.x0 + dx;
+            const width = d.x1 - d.x0;
+            
+            // Find all nodes at the same depth
+            const nodesAtDepth = nodes.filter(n => n.depth === d.depth);
+            const minX = d.depth > 0 ? Math.max(...nodes.filter(n => n.depth === d.depth - 1).map(n => n.x1)) + 20 : 0;
+            const maxX = d.depth < Math.max(...nodes.map(n => n.depth)) 
+                ? Math.min(...nodes.filter(n => n.depth === d.depth + 1).map(n => n.x0)) - width - 20 
+                : width;
+
+            // Apply x constraints
+            d.x0 = Math.max(minX, Math.min(maxX, newX0));
+            d.x1 = d.x0 + width;
+
+            // Apply y constraints
+            d.y0 = Math.max(0, Math.min(height - (d.y1 - d.y0), event.y));
+            d.y1 = d.y0 + (d.y1 - d.y0);
+            
+            // Update node position
+            d3.select(this)
+                .attr("transform", `translate(${d.x0},${d.y0})`);
+
+            // Update the diagram
+            sankey.update({ nodes, links });
+            link.attr("d", d3.sankeyLinkHorizontal());
+
+            // Update text anchor based on new position
+            d3.select(this).select("text")
+                .attr("x", d => d.x0 < width / 2 ? sankey.nodeWidth() + 6 : -6)
+                .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end");
+        }
+
+        // Reset button functionality - updated to reset x positions too
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            nodes.forEach(node => {
+                const initial = initialNodePositions.find(pos => pos.id === node.index);
+                node.x0 = initial.x0;
+                node.x1 = initial.x1;
+                node.y0 = initial.y0;
+                node.y1 = initial.y1;
+            });
+
+            node.transition()
+                .duration(750)
+                .attr("transform", d => `translate(${d.x0},${d.y0})`);
+
+            // Reset text anchors
+            node.select("text")
+                .transition()
+                .duration(750)
+                .attr("x", d => d.x0 < width / 2 ? sankey.nodeWidth() + 6 : -6)
+                .attr("text-anchor", d => d.x0 < width / 2 ? "start" : "end");
+
+            sankey.update({ nodes, links });
+            link.transition()
+                .duration(750)
+                .attr("d", d3.sankeyLinkHorizontal());
+        });
+
+        // Expand/Collapse functionality
+        let nodeDepths = {};
+        nodes.forEach(node => {
+            nodeDepths[node.index] = getNodeDepth(node);
+        });
+
+        function getNodeDepth(node) {
+            let depth = 0;
+            let current = node;
+            while (links.some(link => link.target === current)) {
+                depth++;
+                current = links.find(link => link.target === current).source;
+            }
+            return depth;
+        }
+
+        function toggleNodesAtDepth(depth, show) {
+            const affectedNodes = nodes.filter(node => nodeDepths[node.index] > depth);
+            const affectedLinks = links.filter(link => 
+                nodeDepths[link.source.index] >= depth || nodeDepths[link.target.index] > depth
+            );
+
+            // Toggle visibility
+            node.filter(d => affectedNodes.includes(d))
+                .style("display", show ? "inline" : "none");
+            
+            link.filter(d => affectedLinks.includes(d))
+                .style("display", show ? "inline" : "none");
+        }
+
+        // Default view (show up to depth 3)
+        toggleNodesAtDepth(3, false);
+
+        // Expand All button
+        document.getElementById('expandAllBtn').addEventListener('click', () => {
+            toggleNodesAtDepth(0, true);
+        });
+
+        // Collapse All button
+        document.getElementById('collapseAllBtn').addEventListener('click', () => {
+            toggleNodesAtDepth(3, false);
+        });
+
+        // Make nodes clickable for expand/collapse
+        node.on('click', function(event, d) {
+            const depth = nodeDepths[d.index];
+            const currentDisplay = this.style.display !== 'none';
+            toggleNodesAtDepth(depth, !currentDisplay);
+        });
+    </script>
+</body>
+</html>
