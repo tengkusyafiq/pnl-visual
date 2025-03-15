@@ -9,6 +9,10 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
   <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
   <style>
+    html {
+      overflow: hidden;
+    }
+    
     body {
       margin: 0;
       padding: 20px;
@@ -17,8 +21,9 @@
       background-color: #f2f2f2;
       display: flex;
       flex-direction: column;
-      height: 100vh;
+      height: calc(100vh - 40px); /* Adjust for the padding */
       transition: background 0.2s linear;
+      overflow: hidden;
     }
     .controls {
       margin-bottom: 10px;
@@ -38,16 +43,18 @@
     }
     #graphDiv {
       width: 100%;
-      flex-grow: 1;
+      height: calc(100vh - 140px); /* Adjust height to account for header and controls */
+      flex: 1;
       background-color: #f2f2f2;
-      margin-bottom: 10px;
+      margin: 0;
+      padding: 0;
       transition: background-color 0.3s;
     }
     #menuContainer {
       padding: 10px;
       background-color: #f2f2f2;
-      min-height: 50px;
-      margin-bottom: 20px;
+      min-height: auto;
+      margin-bottom: 0;
       transition: all 0.3s;
     }
     #menuContainer select {
@@ -93,7 +100,7 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 10px; /* Reduce margin */
     }
 
     .header-right {
@@ -108,12 +115,29 @@
       gap: 10px;
     }
 
+    .app-title-container {
+      margin: 0;
+    }
+
     .app-title {
       font-family: 'Montserrat', sans-serif;
       font-size: 28px;
       font-weight: 700;
       margin: 0;
       white-space: nowrap;
+    }
+
+    .app-subtitle {
+      font-family: 'Open Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      margin: 5px 0 0 0;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    body.dark .app-subtitle {
+      color: #aaa;
     }
 
     /* Theme Toggle Styles - Exact match with CodePen */
@@ -165,7 +189,10 @@
 </head>
 <body>
   <div class="header">
-    <h1 class="app-title">💸P&L Visualizer💸</h1>
+    <div class="app-title-container">
+      <h1 class="app-title">💸P&L Visualizer💸</h1>
+      <div class="app-subtitle">Spot the money leaks and tell your P&L story—instantly visualized.</div>
+    </div>
     <div class="header-right">
       <div class="input-group">
         <button onclick="loadDefaultData()">Load Default Data</button>
