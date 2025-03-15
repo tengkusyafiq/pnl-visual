@@ -57,9 +57,9 @@ const PnLProcessor = {
   // Helper function to format large numbers
   formatLargeNumber(value) {
     if (value >= 1e9) {
-      return `${(value / 1e9).toFixed(2)}B`;
+      return `${(value / 1e9).toFixed(2).replace(/\.?0+$/, "")}B`;
     } else if (value >= 1e6) {
-      return `${(value / 1e6).toFixed(2)}M`;
+      return `${(value / 1e6).toFixed(2).replace(/\.?0+$/, "")}M`;
     }
     return value.toLocaleString();
   },
