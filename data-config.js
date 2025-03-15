@@ -1,5 +1,15 @@
 // Data processing and visualization configuration
 const PnLProcessor = {
+  // Helper function to format large numbers
+  formatLargeNumber(value) {
+    if (value >= 1e9) {
+      return `${(value / 1e9).toFixed(2)}B`;
+    } else if (value >= 1e6) {
+      return `${(value / 1e6).toFixed(2)}M`;
+    }
+    return value.toLocaleString();
+  },
+
   getNodeCategory(label, pnlData, nodeIndex = null) {
     // First check if the node is explicitly categorized
     for (const [category, config] of Object.entries(pnlData.categories)) {
@@ -80,17 +90,18 @@ const PnLProcessor = {
             customdata: nodeValues.map((value, index) => ({
               value: value,
               subItems: childCount[index],
+              formattedValue: this.formatLargeNumber(value),
             })),
             hovertemplate:
-              "%{label}<br>$%{customdata.value:,.0f}<br>Sub-items: %{customdata.subItems}<extra></extra>",
+              "%{label}<br>$%{customdata.formattedValue}<br>Sub-items: %{customdata.subItems}<extra></extra>",
             textposition: "center",
             text: pnlData.sankeyData.nodes.map(
               (n, i) =>
                 `${
                   n.label
-                }\n\n<span style='color: #000; background: rgba(255,255,255,0.9); padding: 2px 6px; border-radius: 4px;'>$${nodeValues[
-                  i
-                ].toLocaleString()}</span>`
+                }\n\n<span style='color: #000; background: rgba(255,255,255,0.9); padding: 2px 6px; border-radius: 4px;'>$${this.formatLargeNumber(
+                  nodeValues[i]
+                )}</span>`
             ),
             textfont: {
               size: 12,
