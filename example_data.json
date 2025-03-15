@@ -1,0 +1,41 @@
+{
+    "nodes": [
+      {"name": "Fee Income", "category": "revenue", "value": 4978250},
+      {"name": "Professional Services\nRevenues\n$4.98M", "category": "revenue_total", "value": 4978250},
+      {"name": "Cost of Sales\n($3.13M)", "category": "cost", "value": 3131101},
+      {"name": "Gross Profit\n$1.85M\n37% margin", "category": "profit", "value": 1847149},
+      {"name": "Billable Direct Costs\n$2.97M", "category": "cost", "value": 2974657},
+      {"name": "Non-Billable Direct Costs\n$156K", "category": "cost", "value": 156444},
+      {"name": "Billable Labor\n$2.72M", "category": "cost_detail", "value": 2715561},
+      {"name": "Billable Other\nDirect Expenses\n$259K", "category": "cost_detail", "value": 259096},
+      {"name": "Non-Billable\nDirect Labor\n$139K", "category": "cost_detail", "value": 138506},
+      {"name": "Non-Billable Other\nDirect Expenses\n$18K", "category": "cost_detail", "value": 17938},
+      {"name": "Expenses\n($1.78M)", "category": "expenses", "value": 1781679},
+      {"name": "Net Operating Income\n$65K\n1.3% margin", "category": "profit", "value": 65470},
+      {"name": "Indirect Labor\n($969K)", "category": "expense_detail", "value": 968960},
+      {"name": "Fringe Benefits\n($665K)", "category": "expense_detail", "value": 664694},
+      {"name": "Travel Expenses\n($120K)", "category": "expense_detail", "value": 119850},
+      {"name": "Other Operating\nExpenses\n($28K)", "category": "expense_detail", "value": 28175},
+      {"name": "Net Income\n$64K\n1.3% margin", "category": "final_profit", "value": 64388},
+      {"name": "Other Expenses\n($1K)", "category": "final_expense", "value": 1082}
+    ],
+    "links": [
+      {"source": 0, "target": 1, "value": 4978250},
+      {"source": 1, "target": 2, "value": 3131101},
+      {"source": 1, "target": 3, "value": 1847149},
+      {"source": 2, "target": 4, "value": 2974657},
+      {"source": 2, "target": 5, "value": 156444},
+      {"source": 4, "target": 6, "value": 2715561},
+      {"source": 4, "target": 7, "value": 259096},
+      {"source": 5, "target": 8, "value": 138506},
+      {"source": 5, "target": 9, "value": 17938},
+      {"source": 3, "target": 10, "value": 1781679},
+      {"source": 3, "target": 11, "value": 65470},
+      {"source": 10, "target": 12, "value": 968960},
+      {"source": 10, "target": 13, "value": 664694},
+      {"source": 10, "target": 14, "value": 119850},
+      {"source": 10, "target": 15, "value": 28175},
+      {"source": 11, "target": 16, "value": 64388},
+      {"source": 11, "target": 17, "value": 1082}
+    ]
+  }

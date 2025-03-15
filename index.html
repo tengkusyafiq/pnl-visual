@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <script src="https://rawgit.com/monfera/plotly.js/sankey/dist/plotly-sankey-original-with-stroke.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <div id="graphDiv"></div>
+
+  <script>
+    // Sankey core layout code Copyright Mike Bostock, 2015 (MIT)
+    // with a modification covered with a PR
+    //
+    // Add-on features:
+    //    - use of force for drag&drop without manual overlap fiddling
+    //       - multiple force ticks per frame for faster response
+    //       - starting/stopping force per graph layer (column)
+    //       - use of force for handling apparently non-circular shapes
+    //    - vertical layout (sorry, transition to be disabled later)
+    //    - option for multi-edge handling https://github.com/d3/d3-sankey/pull/19
+    //    - plotly tooltips and raising various plotly events
+    //    - plotly-style color contrast: text becomes white on darker backgrounds
+    //    - highlight all connecting links and nodes when hovering a node
+    // 
+    // Current limitations:
+    //    - positions aren't saved (layout lost on update)
+    //    - positions aren't specifiable yet (no attributes for this yet)
+    //    - cheesy horizontal/vertical switch
+    //    - screenshot fails for a couple of reasons
+    //
+    // PR: https://github.com/plotly/plotly.js/pull/1591
+    var d3 = Plotly.d3;
+    d3.json('example_data_original.json', function(mock) {
+      
+      Plotly.plot('graphDiv', mock.data, mock.layout); 
+     
+      graphDiv.on('plotly_hover', function(e) {
+        console.log('hover', e);
+      });
+      graphDiv.on('plotly_unhover', function(e) {
+        console.log('unhover', e);
+      });
+    });
+  </script>
+</body>
+</html>
